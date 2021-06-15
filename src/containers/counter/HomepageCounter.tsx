@@ -1,4 +1,4 @@
-import { increment, decrement } from '@store/counter/counterActions'
+import { increment, decrement } from 'src/actions/counterActions'
 import { Counter } from '@components/counter/Counter'
 import { AppState } from '@store/store'
 import { Dispatch } from 'redux'

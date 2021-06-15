@@ -1,7 +1,15 @@
-import { CounterAction, CounterActionTypes } from './counterActions'
+import { CounterAction, CounterActionTypes } from '../actions/counterActions'
 
+type Post = {
+  id: number
+  title: string
+}
+
+type Posts = Post[]
 export interface CounterState {
   readonly count: number
+  readonly posts?: Posts
+  readonly post?: Post
 }
 
 const initialCounterState = {
@@ -16,6 +24,8 @@ export const counterReducer = (
   action: CounterAction
 ): CounterState => {
   const { count } = state
+
+  const { payload } = action
   switch (action.type) {
     case CounterActionTypes.INCREMENT:
       return {
@@ -26,6 +36,16 @@ export const counterReducer = (
       return {
         ...state,
         count: count > 0 ? count - 1 : 0,
+      }
+    case CounterActionTypes.ADD_POSTS:
+      return {
+        ...state,
+        posts: payload,
+      }
+    case CounterActionTypes.ADD_POST:
+      return {
+        ...state,
+        post: payload,
       }
     case CounterActionTypes.RESET:
       return initialCounterState

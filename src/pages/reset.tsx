@@ -1,16 +1,32 @@
 import { HomepageCounter } from '@containers/counter/HomepageCounter'
 import Link from 'next/link'
 import { storeWrapper } from '../store/store'
-import { reset } from '@store/counter/counterActions'
+import { addPosts } from 'src/actions/counterActions'
+import axios from 'axios'
 /**
  * Homepage
  */
-const ResetPage: React.FC = () => {
+
+type Post = {
+  id: number
+  title: string
+}
+
+type Posts = Post[]
+
+interface PostsProps {
+  counter: { count: number; posts: Posts }
+}
+
+const ResetPage: React.FC<PostsProps> = (props) => {
+  const { posts } = props.counter
   return (
     <main>
       <Link href={'/'}>
         <a>back</a>
       </Link>
+      {posts?.length > 0 &&
+        posts.map((post) => <div key={post.id.toString()}>{post.title}</div>)}
       <HomepageCounter />
     </main>
   )
@@ -18,7 +34,22 @@ const ResetPage: React.FC = () => {
 
 export const getServerSideProps = storeWrapper.getServerSideProps(
   async ({ store }) => {
-    store.dispatch(reset)
+    try {
+      const res = await axios.get<Posts>(
+        'https://jsonplaceholder.typicode.com/todos/'
+      )
+      const list: Posts = []
+      res.data.map((data) =>
+        list.push({
+          id: data.id,
+          title: data.title,
+        })
+      )
+      store.dispatch(addPosts(list))
+    } catch (err) {
+      console.log(err)
+    }
+    return { props: store.getState() }
   }
 )
 

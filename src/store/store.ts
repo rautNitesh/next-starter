@@ -9,7 +9,7 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 import thunkMiddleware from 'redux-thunk'
 import { createWrapper, MakeStore, HYDRATE } from 'next-redux-wrapper'
 
-import { counterReducer, CounterState } from './counter/counterReducer'
+import { counterReducer, CounterState } from '../reducers/counterReducer'
 
 export interface AppState {
   counter: CounterState
